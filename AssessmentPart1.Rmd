@@ -1,0 +1,63 @@
+```{r}
+#install.packages("maptools")
+#install.packages("tidyverse")
+#library(tidyverse)
+library(maptools)
+library(RColorBrewer)
+library(classInt)
+library(OpenStreetMap)
+library(sp)
+library(rgeos)
+library(sf)
+library(rgdal)
+library(geojsonio)
+library(tmap)
+library(tmaptools)
+#library(shinyjs)
+Liverpool_Lsoa <- read_shape("N:\\GIS\\assessment1\\Liverpool\\e08000012\\E08000012\\shapefiles\\E08000012.shp")
+liverpool_osm <- read_osm(Liverpool_Lsoa, type = "esri", zoom = NULL)
+
+qtm(liverpool_osm) +
+  tm_shape(Liverpool_Lsoa)+
+  tm_polygons("imd_score",
+              style="jenks",
+              midpoint=NA,
+              palette="YlOrBr",
+              title="the IMD score") + 
+  tm_compass(position = c("right", "top"),type = "arrow") + 
+  tm_scale_bar(position = c("center", "bottom")) +
+  tm_layout(title = "Liverpool IMD Score", legend.position = c("left", "bottom"))
+
+```
+```{r}
+
+tmap_mode("view")
+qtm(liverpool_osm) +
+  tm_shape(Liverpool_Lsoa)+
+  tm_polygons("imd_score",
+              style="jenks",
+              midpoint=NA,
+              palette="Blues",
+              title="the IMD score")
+```
+```{r}
+knitr::include_graphics("Liverpool_IMDscore.jpg")
+```
+An assessment of the benefits and drawbacks of GUI vs Command line generated maps:
+ArcGIS is a comprehensive mapping software. Compared with R language mapping, ArcGIS is more easily understood by beginners and its operation is more intuitive. For those with a poor programming foundation, R language mapping might lead to a series of errors.
+Furthermore, ArcGIS will be more convenient to beautify and adjust pictures, while R language will have many restrictions. For example, when information such as legend and scale is inserted into the map, ArcGIS only needs to select the content and drag, while the instruction in R language is relatively rigid.
+However, when encountering large and complex data, R language shows strong data processing and analysis ability, which ArcGIS does not have. In addition, the efficiency of the R language is demonstrated when it is necessary to batch out graphs for analysis. All we need to do is to write code templates and tweak them. In contrast, using ArcGIS requires repeated operations on each image, which is inefficient and too slow.
+
+A review of cartographic good practice and an assessment of your maps as presented:
+Comparing my map with some good works, especially the map about Birmingham imb data on lecture 4, I found the following defects in my map. First, due to the insufficient preparation of previous data, I lacked certain place names in my data. Second, by contrast, the boundaries of each area in my map are too distinct and the map doesn't look artistic enough. Third, my illustrations are not rich enough, and some longitudinal comparisons and quantitative data are not conducive to data analysis in the later stage.
+
+An assessment of the data sources used in their generations:
+This package measured the indices of deprivation for Liverpool. These data were calculated based on every lower layer super output area, which reflected the scores of deprivations ranked by people living in these areas. These data were offered by the Department for Communities and Local Government in 2015 and the last update of these data were released by this department in 2010. Therefore, the source of these data is very authoritative, and the results obtained through the analysis of these data are very reliable. 
+Through the analysis of these data, the government and the public can directly see the wealth distribution of Liverpool, as well as the gap between the rich and the poor in different regions. At the same time, it can also help the government to better allocate social resources and maintain fair and stability of the society.
+
+A review of the workflows used to generate both maps:
+I made both two maps to show the Index of Multiple Deprivation (IMD) of Liverpool in 2015.
+The first one was made by ArcMap. I downloaded the data pack include the shapefile of Liverpool at the LOSA scale and a csv file containing IMD score from CDRC. To generate a map, I first add the shapefile and the csv file via catalog. Then I joined the csv file to the layer and changed symbology to present data values into five classes. The darker the color is, the higher level of deprivation is. Finally, I inserted title, legend, arrow and scale bar into the map to made it more clearly.
+The second map was made using R. Firstly, I installed all packages and then load them in R. Secondly, I read the data from the shapefile in my local directory and made the map. Since the data has already existed in the shapefile, there was no necessary to join attribute data into the map. Thirdly, I added a basemap and some information such as north arrow, scale bar to enrich the map. And I tried to change the color of the map. Finally, I made a little change of the code to change the map into the interactive mode.
+
+
